@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title><ui:insert name="title">User Details</ui:insert></title>
+	<h:outputStylesheet library="css" name="style.css"  />
+</h:head>
+
+<f:view contentType="text/html">
+	<h:body >
+		<h:form id="userslistform">
+			<p:growl id="growlmsg" showDetail="true" showSummary="true" />
+			<f:loadBundle var="cLabel" basename="com.lables.bvs-common-label" />
+			<div id="header">
+				<ui:insert name="header">
+				</ui:insert>
+			</div>
+			<div id="content">
+				<ui:insert name="content">
+					<div class="ui-g">
+						<div class="ui-g-1">
+						</div>
+						<div class="ui-g-4">
+						</div>
+						<div class="ui-g-7">
+							<p:commandButton value="Save" update="usertable, userslistform:userDetailsPanel, growlmsg" actionListener="#{userDetailsManagedBean.saveUser}"/>
+							<p:spacer width="2em;" />
+							<p:commandButton value="Cancel &amp; Go Back" update="usertable, growlmsg" action="#{userDetailsManagedBean.cancelUser}" />
+							<p:spacer width="2em;" />
+							<p:commandButton icon="ui-icon-refresh" update="usertable, userslistform:userDetailsPanel" action="#{userDetailsManagedBean.resetUser}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-1">
+						</div>
+						<div class="ui-g-4">
+							<h:inputHidden value="#{userDetailsManagedBean.loadValidValues}" />
+							<p:dataTable value="#{userDetailsManagedBean.usersList}" var="ulist" id="usertable" >
+								<p:column headerText="User Id"  width="30%">
+									<p:commandLink value="#{ulist.userId}">
+										<p:ajax listener="#{userDetailsManagedBean.readUserDetails}"
+										 update="userslistform:userDetailsPanel, usertable" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="User Name" width="20%">
+									<p:outputLabel value="#{ulist.userName}" />
+								</p:column>
+								<p:column headerText="Remove" width="5%">
+									<p:commandButton icon="ui-icon-trash">
+										<p:ajax listener="#{userDetailsManagedBean.removeUser}"
+									 	update="usertable, userslistform:userDetailsPanel, userslistform:growlmsg" />
+									 </p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</div>
+						<div class="ui-g-7">
+							<p:panel header="User Details" id="userDetailsPanel">
+								<h:panelGrid columns="2"  >
+									<p:outputLabel value="#{cLabel.userIdLabel}" for="userId" />
+									<p:outputLabel id="userId" value="#{userDetailsManagedBean.users.userId}" size="20" />
+
+									<p:outputLabel value="#{cLabel.userNameLabel}" for="userName" />
+									<p:inputText id="userName" value="#{userDetailsManagedBean.users.userName}"
+										 size="30" required="true" requiredMessage="Please enter a Valid User Name"
+										 placeholder="John "/>
+
+									<p:outputLabel value="#{cLabel.emailIdLabel}" for="email" />
+									<p:inputText id="email" value="#{userDetailsManagedBean.users.emailId}"
+									 	size="50" requiredMessage="Please enter the email address" maxlength="50"
+									  	placeholder="example.com" required="true" />
+
+									<p:outputLabel for="status" value="#{cLabel.statusLabel}"  />
+									<p:inputSwitch id="status" style="width:56px;"
+										offLabel="In-Active" onLabel="Active"
+										value="#{userDetailsManagedBean.users.userStatus}" />
+
+								</h:panelGrid>
+							</p:panel>
+						</div>
+					</div>
+				</ui:insert>
+			</div>
+
+			<div id="footer">
+				<ui:insert name="footer">
+				</ui:insert>
+			</div>
+		</h:form>
+
+
+	</h:body>
+</f:view>
+
+
+</html>
